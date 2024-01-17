@@ -201,19 +201,21 @@ defmodule Binance.Futures do
   """
   @spec create_order(map(), map() | nil) :: {:ok, map(), any()} | {:error, error()}
   def create_order(
-        %{symbol: symbol, side: side, type: type, quantity: quantity} = params,
+        %{symbol: symbol, side: side, type: type} = params,
         config \\ nil
       ) do
     arguments = %{
       symbol: symbol,
       side: side,
       type: type,
-      quantity: quantity,
       timestamp: params[:timestamp] || :os.system_time(:millisecond)
     }
 
     arguments =
       arguments
+      |> Map.merge(
+        unless(is_nil(params[:quantity]), do: %{quantity: params[:quantity]}, else: %{})
+      )
       |> Map.merge(
         unless(
           is_nil(params[:new_client_order_id]),
