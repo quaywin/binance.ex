@@ -489,4 +489,24 @@ defmodule Binance.Futures do
       err -> err
     end
   end
+
+  def change_leverage(
+        %{symbol: symbol, leverage: leverage} = params,
+        config \\ nil
+      ) do
+    arguments = %{
+      symbol: symbol,
+      leverage: leverage,
+      timestamp: params[:timestamp] || :os.system_time(:millisecond)
+    }
+
+    case HTTPClient.post_binance("/fapi/v1/leverage", arguments, config) do
+      {:ok, data, headers} ->
+        {:ok, data, headers}
+
+      error ->
+        error
+    end
+  end
+
 end
