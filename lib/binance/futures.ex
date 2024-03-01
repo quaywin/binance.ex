@@ -178,7 +178,7 @@ defmodule Binance.Futures do
     end
   end
 
-  @spec get_position(map() | nil) ::
+  @spec get_positions(map(), map() | nil) ::
           {:ok, list(%Binance.Futures.Position{}), any()} | {:error, error()}
   def get_positions(params \\ %{}, config \\ nil) do
     case HTTPClient.get_binance("/fapi/v2/positionRisk", %{}, config) do
