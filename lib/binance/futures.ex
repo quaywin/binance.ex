@@ -243,6 +243,13 @@ defmodule Binance.Futures do
       |> Map.merge(
         unless(is_nil(params[:close_position]), do: %{closePosition: params[:close_position]}, else: %{})
       )
+      |> Map.merge(
+        unless(
+          is_nil(params[:position_side]),
+          do: %{positionSide: params[:position_side]},
+          else: %{}
+        )
+      )
 
     case HTTPClient.post_binance("/fapi/v1/order", arguments, config) do
       {:ok, data, headers} ->
@@ -288,13 +295,7 @@ defmodule Binance.Futures do
       |> Map.merge(
         unless(is_nil(params[:recv_window]), do: %{recvWindow: params[:recv_window]}, else: %{})
       )
-      |> Map.merge(
-        unless(
-          is_nil(params[:position_side]),
-          do: %{positionSide: params[:position_side]},
-          else: %{}
-        )
-      )
+
 
     {:ok, url, headers, argument_string} =
       HTTPClient.prepare_request(
