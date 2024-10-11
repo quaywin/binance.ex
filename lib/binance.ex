@@ -225,6 +225,13 @@ defmodule Binance do
           else: %{}
         )
       )
+      |> Map.merge(
+        unless(
+          is_nil(params[:position_side]),
+          do: %{positionSide: params[:position_side]},
+          else: %{}
+        )
+      )
       |> Map.merge(unless(is_nil(params[:price]), do: %{price: params[:price]}, else: %{}))
       |> Map.merge(
         unless(is_nil(params[:recv_window]), do: %{recvWindow: params[:recv_window]}, else: %{})
