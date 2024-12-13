@@ -7,7 +7,10 @@ defmodule Binance.Futures.Position do
     :mark_price,
     :position_amt,
     :symbol,
-    :unRealized_profit
+    :unRealized_profit,
+    :position_side,
+    :notional,
+    :break_even_price
   ]
 
   use ExConstructor
