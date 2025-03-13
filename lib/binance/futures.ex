@@ -502,6 +502,14 @@ defmodule Binance.Futures do
     end
   end
 
+  @spec get_ticker_24hr(map(), map() | nil) :: {:ok, any(), any()} | {:error, any(), any()}
+  def get_ticker_24hr(params \\ %{}, config \\ nil) do
+    case HTTPClient.get_binance("/fapi/v1/ticker/24hr", params, config) do
+      {:ok, data, headers} -> {:ok, data, headers}
+      err -> err
+    end
+  end
+
   def change_leverage(
         %{symbol: symbol, leverage: leverage} = params,
         config \\ nil
