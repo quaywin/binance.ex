@@ -130,7 +130,7 @@ defmodule Binance.Futures.Rest.HTTPClient do
 
             params =
               params
-              |> Map.merge(%{timestamp: :os.system_time(:millisecond)})
+              |> Map.merge(%{recvWindow: 10_000, timestamp: :os.system_time(:millisecond)})
               |> Enum.reduce(
                 params,
                 fn x, acc ->
@@ -154,7 +154,7 @@ defmodule Binance.Futures.Rest.HTTPClient do
             argument_string = URI.encode_query(params)
             signature = Util.sign_content(api_secret, argument_string, api_secret_type)
 
-            {:ok, "#{url}?#{argument_string}&signature=#{signature}&recvWindow=10000", headers}
+            {:ok, "#{url}?#{argument_string}&signature=#{signature}", headers}
 
           method in [:post, :put] ->
             headers = [
@@ -168,7 +168,7 @@ defmodule Binance.Futures.Rest.HTTPClient do
               case signed? do
                 true ->
                   signature = Util.sign_content(api_secret, argument_string, api_secret_type)
-                  "#{argument_string}&signature=#{signature}&recvWindow=10000"
+                  "#{argument_string}&signature=#{signature}"
 
                 false ->
                   argument_string
