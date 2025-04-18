@@ -154,7 +154,7 @@ defmodule Binance.Futures.Rest.HTTPClient do
             argument_string = URI.encode_query(params)
             signature = Util.sign_content(api_secret, argument_string, api_secret_type)
 
-            {:ok, "#{url}?#{argument_string}&signature=#{signature}", headers}
+            {:ok, "#{url}?#{argument_string}&signature=#{signature}&recvWindow=10000", headers}
 
           method in [:post, :put] ->
             headers = [
@@ -168,7 +168,7 @@ defmodule Binance.Futures.Rest.HTTPClient do
               case signed? do
                 true ->
                   signature = Util.sign_content(api_secret, argument_string, api_secret_type)
-                  "#{argument_string}&signature=#{signature}"
+                  "#{argument_string}&signature=#{signature}&recvWindow=10000"
 
                 false ->
                   argument_string
