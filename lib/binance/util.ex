@@ -22,7 +22,9 @@ defmodule Binance.Util do
   """
   def sign_content(key, content, key_type) when key_type == "rsa" do
     # Clean the key format
-    case ExPublicKey.loads(key) do
+    cleaned_key = String.replace(key, "\\n", "\n")
+
+    case ExPublicKey.loads(cleaned_key) do
       {:ok, rsa_priv_key} ->
         case ExPublicKey.sign(content, rsa_priv_key) do
           {:ok, signature} ->
