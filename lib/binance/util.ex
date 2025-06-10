@@ -22,16 +22,16 @@ defmodule Binance.Util do
   """
   def sign_content(key, content, key_type) when key_type == "rsa" do
     # Clean the key format
-    cleaned_key = String.replace(key, "\\n", "\n")
-
-    case ExPublicKey.loads(cleaned_key) do
+    case ExPublicKey.loads(key) do
       {:ok, rsa_priv_key} ->
         case ExPublicKey.sign(content, rsa_priv_key) do
           {:ok, signature} ->
             "#{Base.encode64(signature)}" |> URI.encode_www_form()
+
           {:error, reason} ->
             raise "Failed to sign: #{reason}"
         end
+
       {:error, reason} ->
         raise "Invalid RSA key: #{reason}"
     end
