@@ -21,6 +21,8 @@ defmodule Binance.Util do
   Sign a given string using given key using secret key
   """
   def sign_content(key, content, key_type) when key_type == "rsa" do
+    IO.inspect(key)
+
     {:ok, rsa_priv_key} = ExPublicKey.loads(key)
     {:ok, signature} = ExPublicKey.sign(content, rsa_priv_key)
     "#{Base.encode64(signature)}" |> URI.encode_www_form()
