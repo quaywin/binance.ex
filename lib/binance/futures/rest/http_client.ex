@@ -130,7 +130,7 @@ defmodule Binance.Futures.Rest.HTTPClient do
 
             params =
               params
-              |> Map.merge(%{timestamp: :os.system_time(:millisecond)})
+              |> Map.merge(%{recvWindow: 20_000, timestamp: :os.system_time(:millisecond)})
               |> Enum.reduce(
                 params,
                 fn x, acc ->
@@ -161,6 +161,9 @@ defmodule Binance.Futures.Rest.HTTPClient do
               {"X-MBX-APIKEY", api_key},
               {"Content-Type", "application/x-www-form-urlencoded"}
             ]
+
+            params =
+              params |> Map.merge(%{recvWindow: 20_000, timestamp: :os.system_time(:millisecond)})
 
             argument_string = URI.encode_query(params)
 
