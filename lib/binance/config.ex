@@ -49,6 +49,9 @@ defmodule Binance.Config do
   def get(%{
         access_keys: [api_key_access, api_secret_access, api_secret_type_access]
       }) do
+    IO.inspect(System.get_env(api_key_access), label: "api_secret_type_access")
+    IO.inspect(System.get_env(api_secret_access), label: "api_secret_access")
+    IO.inspect(System.get_env(api_secret_type_access), label: "api_secret_type_access")
     %__MODULE__{
       api_key: System.get_env(api_key_access),
       api_secret: System.get_env(api_secret_access),
