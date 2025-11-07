@@ -181,9 +181,9 @@ defmodule Binance.Futures.Rest.HTTPClient do
 
   defp validate_credentials(config) do
     case Config.get(config) do
-      %Config{api_key: api_key, api_secret: api_secret} = config
+      %Config{api_key: api_key, api_secret: api_secret} = cfg
       when is_binary(api_key) and is_binary(api_secret) ->
-        {:ok, config}
+        {:ok, cfg}
 
       _ ->
         {:error, {:config_missing, "Secret or API key missing"}}
