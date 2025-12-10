@@ -736,4 +736,132 @@ defmodule Binance.Futures do
       body: body
     }
   end
+
+  @doc """
+  Cancel an active algo order.
+
+  Either algoId or clientAlgoId must be sent.
+
+  Weight: 1
+
+  Info: https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Cancel-Algo-Order
+  """
+  @spec cancel_algo_order(map(), map() | nil) :: {:ok, map(), any()} | {:error, error(), any()}
+  def cancel_algo_order(params, config \\ nil) do
+    arguments =
+      %{
+        timestamp: params[:timestamp] || :os.system_time(:millisecond)
+      }
+      |> Map.merge(
+        unless(is_nil(params[:algo_id]), do: %{algoId: params[:algo_id]}, else: %{})
+      )
+      |> Map.merge(
+        unless(is_nil(params[:client_algo_id]), do: %{clientAlgoId: params[:client_algo_id]}, else: %{})
+      )
+      |> Map.merge(
+        unless(is_nil(params[:recv_window]), do: %{recvWindow: params[:recv_window]}, else: %{})
+      )
+
+    case HTTPClient.delete_binance("/fapi/v1/algoOrder", arguments, config) do
+      {:ok, data, headers} -> {:ok, data, headers}
+      err -> err
+    end
+  end
+
+  @doc """
+  Cancel All Algo Open Orders for a symbol (params[:symbol])
+
+  Weight: 1
+
+  Info: https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Cancel-All-Algo-Open-Orders
+  """
+  @spec cancel_all_algo_orders(map(), map() | nil) :: {:ok, map(), any()} | {:error, error(), any()}
+  def cancel_all_algo_orders(
+        %{symbol: symbol} = params,
+        config \\ nil
+      ) do
+    arguments =
+      %{
+        symbol: symbol,
+        timestamp: params[:timestamp] || :os.system_time(:millisecond)
+      }
+      |> Map.merge(
+        unless(is_nil(params[:recv_window]), do: %{recvWindow: params[:recv_window]}, else: %{})
+      )
+
+    case HTTPClient.delete_binance("/fapi/v1/algoOpenOrders", arguments, config) do
+      {:ok, data, headers} -> {:ok, data, headers}
+      err -> err
+    end
+  end
+
+  @doc """
+  Query an algo order's status.
+
+  Either algoId or clientAlgoId must be sent.
+
+  Weight: 1
+
+  Info: https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Query-Algo-Order
+  """
+  @spec query_algo_order(map(), map() | nil) ::
+          {:ok, map(), any()} | {:error, error(), any()}
+  def query_algo_order(params, config \\ nil) do
+    arguments =
+      %{
+        timestamp: params[:timestamp] || :os.system_time(:millisecond)
+      }
+      |> Map.merge(
+        unless(is_nil(params[:algo_id]), do: %{algoId: params[:algo_id]}, else: %{})
+      )
+      |> Map.merge(
+        unless(is_nil(params[:client_algo_id]), do: %{clientAlgoId: params[:client_algo_id]}, else: %{})
+      )
+      |> Map.merge(
+        unless(is_nil(params[:recv_window]), do: %{recvWindow: params[:recv_window]}, else: %{})
+      )
+
+    case HTTPClient.get_binance("/fapi/v1/algoOrder", arguments, config) do
+      {:ok, data, headers} -> {:ok, data, headers}
+      err -> err
+    end
+  end
+
+  @doc """
+  Get all algo open orders on a symbol.
+
+  If the symbol is not sent, orders for all symbols will be returned in an array.
+
+  Weight: 1 for a single symbol; 40 when the symbol parameter is omitted
+
+  Info: https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Current-All-Algo-Open-Orders
+  """
+  @spec get_open_algo_orders(map(), map() | nil) ::
+          {:ok, list(map()), any()} | {:ok, map(), any()} | {:error, error(), any()}
+  def get_open_algo_orders(params \\ %{}, config \\ nil) do
+    arguments =
+      %{
+        timestamp: :os.system_time(:millisecond)
+      }
+      |> Map.merge(
+        unless(is_nil(params[:symbol]), do: %{symbol: params[:symbol]}, else: %{})
+      )
+      |> Map.merge(
+        unless(is_nil(params[:algo_type]), do: %{algoType: params[:algo_type]}, else: %{})
+      )
+      |> Map.merge(
+        unless(is_nil(params[:algo_id]), do: %{algoId: params[:algo_id]}, else: %{})
+      )
+      |> Map.merge(
+        unless(is_nil(params[:timestamp]), do: %{timestamp: params[:timestamp]}, else: %{})
+      )
+      |> Map.merge(
+        unless(is_nil(params[:recv_window]), do: %{recvWindow: params[:recv_window]}, else: %{})
+      )
+
+    case HTTPClient.get_binance("/fapi/v1/openAlgoOrders", arguments, config) do
+      {:ok, data, headers} -> {:ok, data, headers}
+      err -> err
+    end
+  end
 end
