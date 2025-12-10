@@ -531,7 +531,7 @@ defmodule Binance.Futures do
 
   @spec create_algo_order(map(), map() | nil) :: {:ok, map(), any()} | {:error, error(), any()}
   def create_algo_order(
-        %{algoType: algo_type, symbol: symbol, side: side, type: type} = params,
+        %{algo_type: algo_type, symbol: symbol, side: side, type: type} = params,
         config \\ nil
       ) do
     # bắt timestamp mặc định nếu chưa có
@@ -631,7 +631,7 @@ defmodule Binance.Futures do
 
   @spec prepare_create_algo_order(map(), map() | nil) :: map()
   def prepare_create_algo_order(
-        %{algoType: algo_type, symbol: symbol, side: side, type: type} = params,
+        %{algo_type: algo_type, symbol: symbol, side: side, type: type} = params,
         config \\ nil
       ) do
     arguments = %{
