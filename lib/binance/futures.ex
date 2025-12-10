@@ -623,7 +623,8 @@ defmodule Binance.Futures do
       )
 
     case HTTPClient.post_binance("/fapi/v1/algoOrder", arguments, config) do
-      {:ok, data, headers} -> {:ok, data, headers}
+      {:ok, data, headers} ->
+        {:ok, Binance.Futures.AlgoOrder.new(data), headers}
       error -> error
     end
   end
@@ -822,7 +823,7 @@ defmodule Binance.Futures do
       )
 
     case HTTPClient.get_binance("/fapi/v1/algoOrder", arguments, config) do
-      {:ok, data, headers} -> {:ok, data, headers}
+      {:ok, data, headers} -> {:ok, Binance.Futures.AlgoOrder.new(data), headers}
       err -> err
     end
   end
@@ -860,7 +861,7 @@ defmodule Binance.Futures do
       )
 
     case HTTPClient.get_binance("/fapi/v1/openAlgoOrders", arguments, config) do
-      {:ok, data, headers} -> {:ok, data, headers}
+      {:ok, data, headers} -> {:ok, Enum.map(data, &Binance.Futures.AlgoOrder.new(&1)), headers}
       err -> err
     end
   end
