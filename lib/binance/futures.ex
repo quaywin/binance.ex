@@ -528,4 +528,212 @@ defmodule Binance.Futures do
         error
     end
   end
+
+  @spec create_algo_order(map(), map() | nil) :: {:ok, map(), any()} | {:error, error(), any()}
+  def create_algo_order(
+        %{algoType: algo_type, symbol: symbol, side: side, type: type} = params,
+        config \\ nil
+      ) do
+    # bắt timestamp mặc định nếu chưa có
+    arguments = %{
+      algoType: algo_type,
+      symbol: symbol,
+      side: side,
+      type: type,
+      timestamp: params[:timestamp] || :os.system_time(:millisecond)
+    }
+
+    arguments =
+      arguments
+      |> Map.merge(
+        unless(is_nil(params[:position_side]),
+          do: %{positionSide: params[:position_side]},
+          else: %{}
+        )
+      )
+      |> Map.merge(
+        unless(is_nil(params[:time_in_force]),
+          do: %{timeInForce: params[:time_in_force]},
+          else: %{}
+        )
+      )
+      |> Map.merge(
+        unless(is_nil(params[:quantity]), do: %{quantity: params[:quantity]}, else: %{})
+      )
+      |> Map.merge(unless(is_nil(params[:price]), do: %{price: params[:price]}, else: %{}))
+      |> Map.merge(
+        unless(is_nil(params[:trigger_price]),
+          do: %{triggerPrice: params[:trigger_price]},
+          else: %{}
+        )
+      )
+      |> Map.merge(
+        unless(is_nil(params[:working_type]), do: %{workingType: params[:working_type]}, else: %{})
+      )
+      |> Map.merge(
+        unless(is_nil(params[:price_match]), do: %{priceMatch: params[:price_match]}, else: %{})
+      )
+      |> Map.merge(
+        unless(is_nil(params[:close_position]),
+          do: %{closePosition: params[:close_position]},
+          else: %{}
+        )
+      )
+      |> Map.merge(
+        unless(is_nil(params[:price_protect]),
+          do: %{priceProtect: params[:price_protect]},
+          else: %{}
+        )
+      )
+      |> Map.merge(
+        unless(is_nil(params[:reduce_only]), do: %{reduceOnly: params[:reduce_only]}, else: %{})
+      )
+      |> Map.merge(
+        unless(is_nil(params[:activation_price]),
+          do: %{activationPrice: params[:activation_price]},
+          else: %{}
+        )
+      )
+      |> Map.merge(
+        unless(is_nil(params[:callback_rate]),
+          do: %{callbackRate: params[:callback_rate]},
+          else: %{}
+        )
+      )
+      |> Map.merge(
+        unless(is_nil(params[:client_algo_id]),
+          do: %{clientAlgoId: params[:client_algo_id]},
+          else: %{}
+        )
+      )
+      |> Map.merge(
+        unless(is_nil(params[:self_trade_prevention_mode]),
+          do: %{selfTradePreventionMode: params[:self_trade_prevention_mode]},
+          else: %{}
+        )
+      )
+      |> Map.merge(
+        unless(is_nil(params[:good_till_date]),
+          do: %{goodTillDate: params[:good_till_date]},
+          else: %{}
+        )
+      )
+      |> Map.merge(
+        unless(is_nil(params[:recv_window]), do: %{recvWindow: params[:recv_window]}, else: %{})
+      )
+
+    case HTTPClient.post_binance("/fapi/v1/algoOrder", arguments, config) do
+      {:ok, data, headers} -> {:ok, data, headers}
+      error -> error
+    end
+  end
+
+  @spec prepare_create_algo_order(map(), map() | nil) :: map()
+  def prepare_create_algo_order(
+        %{algoType: algo_type, symbol: symbol, side: side, type: type} = params,
+        config \\ nil
+      ) do
+    arguments = %{
+      algoType: algo_type,
+      symbol: symbol,
+      side: side,
+      type: type,
+      timestamp: params[:timestamp] || :os.system_time(:millisecond)
+    }
+
+    arguments =
+      arguments
+      |> Map.merge(
+        unless(is_nil(params[:position_side]),
+          do: %{positionSide: params[:position_side]},
+          else: %{}
+        )
+      )
+      |> Map.merge(
+        unless(is_nil(params[:time_in_force]),
+          do: %{timeInForce: params[:time_in_force]},
+          else: %{}
+        )
+      )
+      |> Map.merge(
+        unless(is_nil(params[:quantity]), do: %{quantity: params[:quantity]}, else: %{})
+      )
+      |> Map.merge(unless(is_nil(params[:price]), do: %{price: params[:price]}, else: %{}))
+      |> Map.merge(
+        unless(is_nil(params[:trigger_price]),
+          do: %{triggerPrice: params[:trigger_price]},
+          else: %{}
+        )
+      )
+      |> Map.merge(
+        unless(is_nil(params[:working_type]), do: %{workingType: params[:working_type]}, else: %{})
+      )
+      |> Map.merge(
+        unless(is_nil(params[:price_match]), do: %{priceMatch: params[:price_match]}, else: %{})
+      )
+      |> Map.merge(
+        unless(is_nil(params[:close_position]),
+          do: %{closePosition: params[:close_position]},
+          else: %{}
+        )
+      )
+      |> Map.merge(
+        unless(is_nil(params[:price_protect]),
+          do: %{priceProtect: params[:price_protect]},
+          else: %{}
+        )
+      )
+      |> Map.merge(
+        unless(is_nil(params[:reduce_only]), do: %{reduceOnly: params[:reduce_only]}, else: %{})
+      )
+      |> Map.merge(
+        unless(is_nil(params[:activation_price]),
+          do: %{activationPrice: params[:activation_price]},
+          else: %{}
+        )
+      )
+      |> Map.merge(
+        unless(is_nil(params[:callback_rate]),
+          do: %{callbackRate: params[:callback_rate]},
+          else: %{}
+        )
+      )
+      |> Map.merge(
+        unless(is_nil(params[:client_algo_id]),
+          do: %{clientAlgoId: params[:client_algo_id]},
+          else: %{}
+        )
+      )
+      |> Map.merge(
+        unless(is_nil(params[:self_trade_prevention_mode]),
+          do: %{selfTradePreventionMode: params[:self_trade_prevention_mode]},
+          else: %{}
+        )
+      )
+      |> Map.merge(
+        unless(is_nil(params[:good_till_date]),
+          do: %{goodTillDate: params[:good_till_date]},
+          else: %{}
+        )
+      )
+      |> Map.merge(
+        unless(is_nil(params[:recv_window]), do: %{recvWindow: params[:recv_window]}, else: %{})
+      )
+
+    {:ok, url, headers, body} =
+      HTTPClient.prepare_request(
+        :post,
+        "https://fapi.binance.com/fapi/v1/algoOrder",
+        arguments,
+        config,
+        true
+      )
+
+    %{
+      method: "POST",
+      url: url,
+      headers: headers,
+      body: body
+    }
+  end
 end
