@@ -8,7 +8,7 @@
       "method": "get",
       "options": [],
       "request_body": "",
-      "url": "https://dapi.binance.com/dapi/v1/account?timestamp=1597746604793&signature=***"
+      "url": "https://dapi.binance.com/dapi/v2/account?timestamp=1597746604793&signature=***"
     },
     "response": {
       "binary": false,

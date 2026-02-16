@@ -171,7 +171,7 @@ defmodule Binance.Futures do
   """
   @spec get_account(map() | nil) :: {:ok, %Binance.Account{}, any()} | {:error, error(), any()}
   def get_account(config \\ nil) do
-    case HTTPClient.get_binance("/fapi/v1/account", %{}, config) do
+    case HTTPClient.get_binance("/fapi/v2/account", %{}, config) do
       {:ok, data, headers} ->
         {:ok, Binance.Futures.Account.new(data), headers}
 
@@ -625,7 +625,9 @@ defmodule Binance.Futures do
     case HTTPClient.post_binance("/fapi/v1/algoOrder", arguments, config) do
       {:ok, data, headers} ->
         {:ok, Binance.Futures.AlgoOrder.new(data), headers}
-      error -> error
+
+      error ->
+        error
     end
   end
 
@@ -753,11 +755,12 @@ defmodule Binance.Futures do
       %{
         timestamp: params[:timestamp] || :os.system_time(:millisecond)
       }
+      |> Map.merge(unless(is_nil(params[:algo_id]), do: %{algoId: params[:algo_id]}, else: %{}))
       |> Map.merge(
-        unless(is_nil(params[:algo_id]), do: %{algoId: params[:algo_id]}, else: %{})
-      )
-      |> Map.merge(
-        unless(is_nil(params[:client_algo_id]), do: %{clientAlgoId: params[:client_algo_id]}, else: %{})
+        unless(is_nil(params[:client_algo_id]),
+          do: %{clientAlgoId: params[:client_algo_id]},
+          else: %{}
+        )
       )
       |> Map.merge(
         unless(is_nil(params[:recv_window]), do: %{recvWindow: params[:recv_window]}, else: %{})
@@ -776,7 +779,8 @@ defmodule Binance.Futures do
 
   Info: https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Cancel-All-Algo-Open-Orders
   """
-  @spec cancel_all_algo_orders(map(), map() | nil) :: {:ok, map(), any()} | {:error, error(), any()}
+  @spec cancel_all_algo_orders(map(), map() | nil) ::
+          {:ok, map(), any()} | {:error, error(), any()}
   def cancel_all_algo_orders(
         %{symbol: symbol} = params,
         config \\ nil
@@ -812,11 +816,12 @@ defmodule Binance.Futures do
       %{
         timestamp: params[:timestamp] || :os.system_time(:millisecond)
       }
+      |> Map.merge(unless(is_nil(params[:algo_id]), do: %{algoId: params[:algo_id]}, else: %{}))
       |> Map.merge(
-        unless(is_nil(params[:algo_id]), do: %{algoId: params[:algo_id]}, else: %{})
-      )
-      |> Map.merge(
-        unless(is_nil(params[:client_algo_id]), do: %{clientAlgoId: params[:client_algo_id]}, else: %{})
+        unless(is_nil(params[:client_algo_id]),
+          do: %{clientAlgoId: params[:client_algo_id]},
+          else: %{}
+        )
       )
       |> Map.merge(
         unless(is_nil(params[:recv_window]), do: %{recvWindow: params[:recv_window]}, else: %{})
@@ -844,15 +849,11 @@ defmodule Binance.Futures do
       %{
         timestamp: :os.system_time(:millisecond)
       }
-      |> Map.merge(
-        unless(is_nil(params[:symbol]), do: %{symbol: params[:symbol]}, else: %{})
-      )
+      |> Map.merge(unless(is_nil(params[:symbol]), do: %{symbol: params[:symbol]}, else: %{}))
       |> Map.merge(
         unless(is_nil(params[:algo_type]), do: %{algoType: params[:algo_type]}, else: %{})
       )
-      |> Map.merge(
-        unless(is_nil(params[:algo_id]), do: %{algoId: params[:algo_id]}, else: %{})
-      )
+      |> Map.merge(unless(is_nil(params[:algo_id]), do: %{algoId: params[:algo_id]}, else: %{}))
       |> Map.merge(
         unless(is_nil(params[:timestamp]), do: %{timestamp: params[:timestamp]}, else: %{})
       )
