@@ -56,6 +56,26 @@ defmodule Binance.Config do
     }
   end
 
+  @doc """
+  Get API configs from direct key values (from database).
+  Used by QuaywinTrading.UserKeys to pass keys directly from the user_keys table.
+
+  ## Examples
+      iex> Binance.Config.get(%{api_key: "abc", api_secret: "xyz", api_secret_type: "HMAC"})
+  """
+  def get(%{
+        api_key: api_key,
+        api_secret: api_secret,
+        api_secret_type: api_secret_type
+      })
+      when is_binary(api_key) and is_binary(api_secret) do
+    %__MODULE__{
+      api_key: api_key,
+      api_secret: api_secret,
+      api_secret_type: api_secret_type
+    }
+  end
+
   def get(_) do
     Logger.error("Incorrect config setup.")
   end
