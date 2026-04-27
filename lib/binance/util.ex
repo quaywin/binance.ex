@@ -17,10 +17,22 @@ defmodule Binance.Util do
     end
   end
 
+  def sign_content(key, content, "rsa") do
+    sign_rsa(key, content)
+  end
+
+  def sign_content(key, content, "RSA") do
+    sign_rsa(key, content)
+  end
+
+  def sign_content(key, content, _key_type) do
+    sign_content(key, content)
+  end
+
   @doc """
   Sign a given string using given key using secret key
   """
-  def sign_content(key, content, key_type) when String.downcase(key_type) == "rsa" do
+  def sign_content(key, content, key_type) when key_type == "rsa" do
     # Clean the key format
     cleaned_key = String.replace(key, "\\n", "\n")
 
